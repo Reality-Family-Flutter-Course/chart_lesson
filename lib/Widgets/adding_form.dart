@@ -1,5 +1,7 @@
-import 'package:chart_lesson/Bloc/transaction_bloc.dart';
-import 'package:chart_lesson/Models/transaction.dart';
+import 'dart:io';
+
+import 'package:chart_lesson/Widgets/Factory/Classes/config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -19,86 +21,63 @@ class _AddingFormState extends State<AddingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 10,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          TextField(
-            decoration: const InputDecoration(
-              labelText: "Название транзакции",
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom +
+                (Platform.isIOS ? 30 : 10)),
+        child: Column(
+          crossAxisAlignment: Config().getFactory!.getAddButtonPosition(),
+          children: [
+            TextField(
+              decoration: const InputDecoration(
+                labelText: "Название транзакции",
+              ),
+              controller: _titleController,
             ),
-            controller: _titleController,
-          ),
-          const Divider(
-            color: Colors.transparent,
-          ),
-          TextField(
-            decoration: const InputDecoration(
-              labelText: "Сумма транзакции",
+            const Divider(
+              color: Colors.transparent,
             ),
-            controller: _amountController,
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
+            TextField(
+              decoration: const InputDecoration(
+                labelText: "Сумма транзакции",
+              ),
+              controller: _amountController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
-          ),
-          const Divider(
-            color: Colors.transparent,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Выбранная дата транзакции:"),
-              transactionDate == null
-                  ? TextButton(
-                      onPressed: () {
-                        showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime.now())
-                            .then(
-                          (value) {
-                            setState(() {
-                              transactionDate = value;
-                            });
-                          },
-                        );
-                      },
-                      child: const Text("Выбрать"),
-                    )
-                  : Text(
-                      DateFormat("dd.MM.yyyy").format(transactionDate!),
-                    ),
-            ],
-          ),
-          const Divider(
-            color: Colors.transparent,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (double.tryParse(_amountController.text) == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Вы ввели не корректное число"),
-                  ),
-                );
-              }
-
-              TransactionBloc().addTransaction(
-                Transaction(
-                    name: _titleController.text,
-                    count: double.parse(_amountController.text),
-                    date: transactionDate ?? DateTime.now()),
-              );
-              Navigator.pop(context);
-            },
-            child: const Text("Добавить"),
-          )
-        ],
+            const Divider(
+              color: Colors.transparent,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Выбранная дата транзакции:"),
+                transactionDate == null
+                    ? Config().getFactory!.getChooseButton((dateTime) {
+                        setState(() {
+                          transactionDate = dateTime;
+                        });
+                      })
+                    : Text(
+                        DateFormat("dd.MM.yyyy").format(transactionDate!),
+                      ),
+              ],
+            ),
+            const Divider(
+              color: Colors.transparent,
+            ),
+            Config().getFactory!.getAddButton(
+                  transactionDate,
+                  _amountController,
+                  _titleController,
+                ),
+          ],
+        ),
       ),
     );
   }

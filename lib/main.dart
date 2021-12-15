@@ -1,6 +1,7 @@
-import 'package:chart_lesson/Widgets/adding_form.dart';
+import 'package:chart_lesson/Widgets/Factory/Classes/config.dart';
 import 'package:chart_lesson/Widgets/charts_list.dart';
 import 'package:chart_lesson/Widgets/transactions_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -45,34 +46,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "ChartApp",
-          style: TextStyle(
-            fontFamily: "Quiksand",
-          ),
-        ),
-      ),
-      body: Column(
+    final pageBody = SafeArea(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: const [
           ChartsList(),
           TransactionsList(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) => const AddingForm(),
-          );
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
-      ),
     );
+
+    return Config().getFactory!.getPageScaffold(pageBody);
   }
 }

@@ -54,17 +54,22 @@ class _ChartsListState extends State<ChartsList> {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Row(
-            children: groupedTransactionsValues
-                .map(
-                  (date) => ChartElement(
-                      title: date["day"],
-                      count: date["amount"],
-                      procentCount: totalSpending == 0
-                          ? 0.0
-                          : date['amount'] / totalSpending),
-                )
-                .toList(),
+          child: SizedBox(
+            height: 101,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: groupedTransactionsValues
+                  .map(
+                    (date) => ChartElement(
+                        title: date["day"],
+                        count: date["amount"],
+                        procentCount: totalSpending == 0
+                            ? 0.0
+                            : date['amount'] / totalSpending),
+                  )
+                  .toList(),
+            ),
           ),
         ),
       ),

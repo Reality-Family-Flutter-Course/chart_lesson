@@ -27,6 +27,7 @@ class _TransactionsListState extends State<TransactionsList> {
       child: ListView.builder(
         shrinkWrap: true,
         itemBuilder: (context, position) => TransactionElement(
+          key: ValueKey(TransactionBloc().transactions[position].id),
           transaction: TransactionBloc().transactions[position],
         ),
         itemCount: TransactionBloc().transactions.length,
